@@ -28,11 +28,11 @@ const addProduct = async(req,res)=>{
 const getProductByName = async(req,res)=>{
     try{
         const {name} = req.body
-        const product =  await Product.findOne({name})
+        const product =  await Product.find();
 
         if(product){
             res.status(201).json({
-                status:"OK",
+                //status:"OK",
                 product,
                 
             })
