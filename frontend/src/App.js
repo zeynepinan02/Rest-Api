@@ -1,90 +1,79 @@
-import { useState , useEffect} from 'react';
-import axios from "axios";
+
 import './App.css';
+import React, {useEffect, useState} from "react";
 
 
 function App() {
+ const [data1, setData]=useState([]);
 
-  
-  
-  const [data, setData]=useState([]);
-  useEffect(()=> {
-    const getProduct=async()=>{
-      const res=await axios.get("http://localhost:5000/product");
-      
-      if(res.status===200){
-          setData(res.data);
-      }
-      console.log(data);
-  };
-      getProduct();
-  }, []);
+  useEffect(() => {
+    getProducts();
+}, []);
 
-  
-  // const [inputValue, setInputValue] = useState('');
-
-  /*const [data, setData]=useState([]);
-    useEffect(()=> {
-        getproduct();
-    }, []);
-
-    const getproduct=async()=>{
-        const res=await axios.get("http://localhost:5000/product");
+const getProducts = async () => {
+    try {
+        const response = await window.fetch("http://localhost:5000/product");
         
-        if(res.status==="OK"){
-            setData(res.data);
-        }
-        console.log(res.data);
-      }*/
-      /*useEffect(() => {
-        const listProducts = async () => {
-          try {
-            const resp = await window.fetch('http://localhost:5000/product');
-            const data = await resp.json();
-            //const dataArray = Object.values(data.product);
-            //console.log(dataArray[0])
-            setProduct(data);
-
-            console.log(data);
-          } catch (error) {
-            console.error('Verileri alma hatası:', error);
-          }
-        };
-    
-        listProducts();
-      }, []);
-       */
-  return (
-    <div className="App">
-        <div className='table-wrapper'>
-        <table>
-            <thead>
-               <tr>
-                <th>id</th>
-                <th>name</th>
-                <th>category</th>
-                </tr> 
-            </thead>
-            <tbody>
-               {data&&data.map((item,index)=>(
-                 <tr key={index}>
-                 <td>{index}</td>
-                 <td>{item.product.name}</td>
-                 <td><div className='buttons'>
-                     <button className="btn btn primary">View</button>
-                     <button className="btn btn primary">Edit</button>
-                     <button className="btn btn primary" >Delete</button>
-                     </div></td>
-             </tr>
-               )
-               )}
+        if (response.ok) { // HTTP yanıtı başarılı mı diye kontrol edin
+            const data = await response.json(); // Yanıtı JSON olarak çözümleyin
+            const array=Object.values(data.product);
+            setData(array);
+            console.log(data1); // Veriyi kontrol et
             
-               
-            </tbody>
-        </table>
-    </div>  
+        } else {
+            console.error("Ürünleri alma başarısız oldu.");
+        }
+    } catch (error) {
+        console.error("Ürünleri alma sırasında bir hata oluştu:", error);
+    }
+};
+
+
+/*const product = data1.map((item, index) => (
+  <tr key={index}>
+      <td>{item._id}</td>
+      <td>{item.name}</td>
+      <td>{item.category}</td>
+      <td><div className="buttons">
+               <button className="btn btn-primary">EDİT</button>
+               <button className="btn btn-priimary">DELETE</button>
+             </div></td>
+  </tr>
+));*/
+  return (
+
+    <div className="App">
+      <table>
+        <tr>
+            <td>id</td>
+            <td>Name</td>
+            <td>Category</td>
+        </tr>
+        <tbody>
+         {data1 && data1.map((item,index) => ( 
+         <tr key={index}>
+           <td>{item._id}</td>
+           <td>{item.name}</td>
+           <td>{item.category}</td>
+           <td>
+             <div className="buttons">
+               <button className="btn btn-primary">EDİT</button>
+               <button className="btn btn-priimary">DELETE</button>
+             </div>
+             
+           </td>
+         </tr>
+       ))} 
+      <div className="buttons">
+               <button className="btn btn-primary">YENİ EKLE</button>
+            
+             </div>
+      
+       </tbody>
+    </table>
     </div>
   );
-}
+};
 
 export default App;
+
